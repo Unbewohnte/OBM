@@ -70,7 +70,7 @@ func createSettingsFile() {
 	file.Write(jsonEncodedSettings)
 
 	file.Close()
-	log.Println("Successfully created new settingsFile")
+	log.Println("Successfully created new settings file")
 }
 
 // filepath.Joins the main osu directory with its songs folder
