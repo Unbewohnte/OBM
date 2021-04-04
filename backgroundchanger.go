@@ -204,6 +204,7 @@ func replaceBackgrounds(beatmapFolder, replacementPicPath string) (successful, f
 			if err != nil {
 				failed++
 				log.Println("ERROR: Error removing old background : ", err, " file: ", backgroundPath)
+				continue
 			}
 
 			// create new background file
@@ -219,6 +220,7 @@ func replaceBackgrounds(beatmapFolder, replacementPicPath string) (successful, f
 			err = copyFile(replacementPicPath, backgroundPath)
 			if err != nil {
 				failed++
+				continue
 			}
 			successful++
 		}
