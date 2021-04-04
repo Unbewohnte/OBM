@@ -113,6 +113,7 @@ func isBeatmap(filename string) bool {
 	return false
 }
 
+// checks given filename for most common image extentions
 func isImage(filename string) bool {
 	var imageExtentions []string = []string{"jpeg", "jpg", "png", "JPEG", "JPG", "PNG"}
 	for _, extention := range imageExtentions {
