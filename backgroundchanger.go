@@ -70,7 +70,7 @@ func createSettingsFile() {
 	file.Write(jsonEncodedSettings)
 
 	file.Close()
-	log.Println("Successfully created new settings file")
+	log.Println("Successfully created new settingsFile")
 }
 
 // filepath.Joins the main osu directory with its songs folder
@@ -113,50 +113,69 @@ func isBeatmap(filename string) bool {
 	return false
 }
 
+func isImage(filename string) bool {
+	var imageExtentions []string = []string{"jpeg", "jpg", "png", "JPEG", "JPG", "PNG"}
+	for _, extention := range imageExtentions {
+		if strings.Contains(filename, extention) {
+			return true
+		}
+	}
+	return false
+}
+
 // parses .osu file and returns the filename of its background
-func getBackgroundName(pathToOSUbeatmap string) string {
+func getBackgroundName(pathToOSUbeatmap string) (string, error) {
 	beatmapBytes, err := os.ReadFile(pathToOSUbeatmap)
 	if err != nil {
-		log.Println("ERROR: Error reading beatmap file : ", err)
+		return "", err
 	}
 	beatmapContents := string(beatmapBytes)
 
 	eventsIndex := strings.Index(beatmapContents, "[Events]")
 	if eventsIndex == -1 {
-		return ""
+		return "", nil
 	}
 	breakPeriodsIndex := strings.Index(beatmapContents, "//Break Periods")
 	if eventsIndex == -1 {
-		return ""
+		return "", nil
 	}
-	beatmapBackground := strings.Split(beatmapContents[eventsIndex:breakPeriodsIndex], ",")[2]
+	contentBetween := strings.Split(beatmapContents[eventsIndex:breakPeriodsIndex], ",")
 
-	return beatmapBackground
+	for _, chunk := range contentBetween {
+		if isImage(chunk) {
+			return chunk[1 : len(chunk)-1], nil
+		}
+	}
+	return "", nil
 }
 
 // opens given files, copies one into another
-func copyFile(src, dst string) {
+func copyFile(src, dst string) error {
 	srcFile, err := os.Open(src)
 	if err != nil {
 		log.Println("ERROR: ", err)
+		return err
 	}
 	defer srcFile.Close()
 
 	dstFile, err := os.OpenFile(dst, os.O_WRONLY, os.ModePerm)
 	if err != nil {
 		log.Println("ERROR: ", err)
+		return err
 	}
 	defer dstFile.Close()
 
 	_, err = io.Copy(dstFile, srcFile)
 	if err != nil {
 		log.Println("ERROR: Error copying files : ", err)
+		return err
 	}
+	return nil
 }
 
 // reads contents of given dir; searches for .osu files; parses them for background info;
 // removes original background and replaces it with copied version of given image
-func replaceBackgrounds(beatmapFolder, replacementPicPath string) {
+func replaceBackgrounds(beatmapFolder, replacementPicPath string) (successful, failed uint64) {
 	files, err := os.ReadDir(beatmapFolder)
 	if err != nil {
 		log.Fatal("ERROR: Wrong path : ", err)
@@ -166,29 +185,46 @@ func replaceBackgrounds(beatmapFolder, replacementPicPath string) {
 
 		if isBeatmap(filename) {
 
-			beatmapBackgroundFilename := strings.Split(getBackgroundName(filepath.Join(beatmapFolder, filename)), "\"")[1]
+			beatmapBackgroundFilename, err := getBackgroundName(filepath.Join(beatmapFolder, filename))
+			if err != nil {
+				failed++
+				continue
+			}
 			if beatmapBackgroundFilename == "" {
+				log.Println("BEATMAP: ", filename, " Could not find beatmap name")
+				failed++
 				continue
 			}
 
 			backgroundPath := filepath.Join(beatmapFolder, beatmapBackgroundFilename)
-			log.Println(backgroundPath)
+			log.Println("BEATMAP: ", filename, " found background")
 
 			// remove old background
-			os.Remove(backgroundPath)
+			err = os.Remove(backgroundPath)
+			if err != nil {
+				failed++
+				log.Println("ERROR: Error removing old background : ", err, " file: ", backgroundPath)
+			}
 
 			// create new background file
 			bgFile, err := os.Create(backgroundPath)
 			if err != nil {
+				failed++
 				log.Println("ERROR: Error creating new background file : ", err)
+				continue
 			}
-			bgFile.Close()
+			defer bgFile.Close()
 
 			// copy the contents of a given image to the newly created bg file
-			copyFile(replacementPicPath, backgroundPath)
+			err = copyFile(replacementPicPath, backgroundPath)
+			if err != nil {
+				failed++
+			}
+			successful++
 		}
 
 	}
+	return successful, failed
 }
 
 // creates a complete black image file
@@ -252,8 +288,12 @@ func main() {
 	log.Printf("Found %d song folders", len(songPaths))
 
 	// replacing backgrounds for each beatmap
+	var successful, failed uint64 = 0, 0
 	for _, songPath := range songPaths {
-		replaceBackgrounds(songPath, replacementImage)
+		s, f := replaceBackgrounds(songPath, replacementImage)
+		successful += s
+		failed += f
 	}
+	log.Printf("\n\nDONE. %d successful; %d failed", successful, failed)
 
 }
