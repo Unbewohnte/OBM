@@ -143,7 +143,6 @@ func getBackgroundName(pathToOSUbeatmap string) (string, error) {
 
 	for _, chunk := range contentBetween {
 		if isImage(chunk) {
-			log.Println(strings.Split(chunk, "\"")[1])
 			return strings.Split(chunk, "\"")[1], nil
 		}
 	}
