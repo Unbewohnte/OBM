@@ -113,7 +113,6 @@ func isBeatmap(filename string) bool {
 	return false
 }
 
-// checks given filename for most common image extentions
 func isImage(filename string) bool {
 	var imageExtentions []string = []string{"jpeg", "jpg", "png", "JPEG", "JPG", "PNG"}
 	for _, extention := range imageExtentions {
@@ -144,7 +143,8 @@ func getBackgroundName(pathToOSUbeatmap string) (string, error) {
 
 	for _, chunk := range contentBetween {
 		if isImage(chunk) {
-			return chunk[1 : len(chunk)-1], nil
+			log.Println(strings.Split(chunk, "\"")[1])
+			return strings.Split(chunk, "\"")[1], nil
 		}
 	}
 	return "", nil
@@ -205,7 +205,6 @@ func replaceBackgrounds(beatmapFolder, replacementPicPath string) (successful, f
 			if err != nil {
 				failed++
 				log.Println("ERROR: Error removing old background : ", err, " file: ", backgroundPath)
-				continue
 			}
 
 			// create new background file
@@ -221,7 +220,6 @@ func replaceBackgrounds(beatmapFolder, replacementPicPath string) (successful, f
 			err = copyFile(replacementPicPath, backgroundPath)
 			if err != nil {
 				failed++
-				continue
 			}
 			successful++
 		}
