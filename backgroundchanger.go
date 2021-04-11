@@ -10,11 +10,16 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
+	"time"
 )
 
 var (
 	// used as a flag if the program executed for "the first time"
 	settingsFileExisted bool = false
+
+	WG         sync.WaitGroup
+	maxWorkers uint = 50
 )
 
 const (
@@ -247,6 +252,17 @@ func createBlackBG(width, height int) {
 	log.Println("Successfully created black background")
 }
 
+// a basic implementation of a concurrent worker
+func worker(paths <-chan string, replacementImage string, successful, failed *uint64, WG *sync.WaitGroup) {
+	defer WG.Done()
+	for songPath := range paths {
+		s, f := replaceBackgrounds(songPath, replacementImage)
+		*successful += s
+		*failed += f
+	}
+
+}
+
 func init() {
 	setUpLogs()
 	createSettingsFile()
@@ -257,6 +273,7 @@ func main() {
 	if !settingsFileExisted {
 		return
 	}
+	startingTime := time.Now().UTC()
 
 	settings := getSettings()
 
@@ -279,21 +296,31 @@ func main() {
 	}
 
 	// storing all paths to each beatmap
-	var songPaths []string
-	for _, content := range osuSongsDirContents {
-		if content.IsDir() {
-			songPaths = append(songPaths, filepath.Join(osuSongsDir, content.Name()))
+	songPaths := make(chan string, len(osuSongsDirContents))
+	for _, songDir := range osuSongsDirContents {
+		if songDir.IsDir() {
+			songPaths <- filepath.Join(osuSongsDir, songDir.Name())
 		}
 	}
 	log.Printf("Found %d song folders", len(songPaths))
 
-	// replacing backgrounds for each beatmap
-	var successful, failed uint64 = 0, 0
-	for _, songPath := range songPaths {
-		s, f := replaceBackgrounds(songPath, replacementImage)
-		successful += s
-		failed += f
+	// check if there is less job than workers
+	if int(maxWorkers) > len(songPaths) {
+		maxWorkers = uint(len(songPaths))
 	}
-	log.Printf("\n\nDONE. %d successful; %d failed", successful, failed)
+
+	// replacing backgrounds for each beatmap concurrently
+	var successful, failed uint64 = 0, 0
+	for i := 0; i < int(maxWorkers); i++ {
+		WG.Add(1)
+		go worker(songPaths, replacementImage, &successful, &failed, &WG)
+	}
+
+	close(songPaths)
+	WG.Wait()
+
+	endTime := time.Now().UTC()
+
+	log.Printf("\n\nDONE in %v . %d successful; %d failed", endTime.Sub(startingTime), successful, failed)
 
 }
