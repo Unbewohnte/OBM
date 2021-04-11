@@ -308,7 +308,7 @@ func main() {
 	}
 	log.Printf("Found %d song folders", len(songPaths))
 
-	// check if there is less job than workers
+	// check if there are less jobs than workers
 	if int(settings.MaxWorkers) > len(songPaths) {
 		settings.MaxWorkers = uint(len(songPaths))
 	}
