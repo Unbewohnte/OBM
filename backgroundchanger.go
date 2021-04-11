@@ -17,9 +17,7 @@ import (
 var (
 	// used as a flag if the program executed for "the first time"
 	settingsFileExisted bool = false
-
-	WG         sync.WaitGroup
-	maxWorkers uint = 50
+	WG                  sync.WaitGroup
 )
 
 const (
@@ -31,6 +29,7 @@ type Settings struct {
 	OsuDir               string `json:"pathToOsu"`
 	ReplacementImagePath string `json:"pathToimage"`
 	CreateBlackBGImage   bool   `json:"createBlackBackgoundImage"`
+	MaxWorkers           uint   `json:"maxConcurrentWorkers"`
 }
 
 // creates directory for logs and sets output to file
@@ -67,6 +66,7 @@ func createSettingsFile() {
 		OsuDir:               "",
 		ReplacementImagePath: "",
 		CreateBlackBGImage:   true,
+		MaxWorkers:           50,
 	}
 	jsonEncodedSettings, err := json.MarshalIndent(settings, "", " ")
 	if err != nil {
@@ -103,6 +103,10 @@ func getSettings() Settings {
 	err = json.Unmarshal(settingsFile, &settings)
 	if err != nil {
 		log.Fatal("ERROR: Error unmarshalling json file : ", err)
+	}
+	if settings.MaxWorkers <= 0 {
+		log.Println("`maxConcurrentWorkers` is set to 0 or less. Replaced with 1")
+		settings.MaxWorkers = 1
 	}
 	return settings
 }
@@ -305,13 +309,13 @@ func main() {
 	log.Printf("Found %d song folders", len(songPaths))
 
 	// check if there is less job than workers
-	if int(maxWorkers) > len(songPaths) {
-		maxWorkers = uint(len(songPaths))
+	if int(settings.MaxWorkers) > len(songPaths) {
+		settings.MaxWorkers = uint(len(songPaths))
 	}
 
 	// replacing backgrounds for each beatmap concurrently
 	var successful, failed uint64 = 0, 0
-	for i := 0; i < int(maxWorkers); i++ {
+	for i := 0; i < int(settings.MaxWorkers); i++ {
 		WG.Add(1)
 		go worker(songPaths, replacementImage, &successful, &failed, &WG)
 	}
