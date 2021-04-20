@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"image"
 	"image/color"
 	"image/png"
@@ -140,15 +142,18 @@ func getBackgroundName(pathToOSUbeatmap string) (string, error) {
 	}
 	beatmapContents := string(beatmapBytes)
 
+	// get index of "[Events]" (this is where BG filename is stored)
 	eventsIndex := strings.Index(beatmapContents, "[Events]")
 	if eventsIndex == -1 {
-		return "", nil
+		return "", errors.New("Could not retrieve index of \"[Events]\"")
 	}
-	breakPeriodsIndex := strings.Index(beatmapContents, "//Break Periods")
-	if eventsIndex == -1 {
-		return "", nil
+	// get index of [TimingPoints] (this tag is right after the previous "[Events]" tag,
+	// so we can grab the whole "[Events]" tag contents)
+	timingPointsIndex := strings.Index(beatmapContents, "[TimingPoints]")
+	if timingPointsIndex == -1 {
+		return "", errors.New("Could not retrieve index of \"[TimingPoints]\"")
 	}
-	contentBetween := strings.Split(beatmapContents[eventsIndex:breakPeriodsIndex], ",")
+	contentBetween := strings.Split(beatmapContents[eventsIndex:timingPointsIndex], ",")
 
 	for _, chunk := range contentBetween {
 		if isImage(chunk) {
@@ -193,33 +198,35 @@ func replaceBackgrounds(beatmapFolder, replacementPicPath string) (successful, f
 		filename := file.Name()
 
 		if isBeatmap(filename) {
+			beatmap := filename
 
-			beatmapBackgroundFilename, err := getBackgroundName(filepath.Join(beatmapFolder, filename))
+			// getting BG filename
+			beatmapBackgroundFilename, err := getBackgroundName(filepath.Join(beatmapFolder, beatmap))
 			if err != nil {
+				log.Println(fmt.Sprintf("BEATMAP: %s: ERROR: Error getting background filename: %s", beatmap, err))
 				failed++
 				continue
 			}
 			if beatmapBackgroundFilename == "" {
-				log.Println("BEATMAP: ", filename, " Could not find beatmap name")
+				log.Println(fmt.Sprintf("BEATMAP: %s Could not find beatmap`s background filename", beatmap))
 				failed++
 				continue
 			}
 
 			backgroundPath := filepath.Join(beatmapFolder, beatmapBackgroundFilename)
-			log.Println("BEATMAP: ", filename, " found background")
 
 			// remove old background
 			err = os.Remove(backgroundPath)
 			if err != nil {
 				failed++
-				log.Println("ERROR: Error removing old background : ", err, " file: ", backgroundPath)
+				log.Println(fmt.Sprintf("BEATMAP: %v: ERROR: Error removing old background : %s", beatmap, err))
 			}
 
 			// create new background file
 			bgFile, err := os.Create(backgroundPath)
 			if err != nil {
 				failed++
-				log.Println("ERROR: Error creating new background file : ", err)
+				log.Println(fmt.Sprintf("BEATMAP: %s: ERROR: Error creating new background file : %s", beatmap, err))
 				continue
 			}
 			defer bgFile.Close()
@@ -227,7 +234,9 @@ func replaceBackgrounds(beatmapFolder, replacementPicPath string) (successful, f
 			// copy the contents of a given image to the newly created bg file
 			err = copyFile(replacementPicPath, backgroundPath)
 			if err != nil {
+				log.Println(fmt.Sprintf("BEATMAP: %s: ERROR: Error copying file: %s", beatmap, err))
 				failed++
+				continue
 			}
 			successful++
 		}
@@ -308,7 +317,7 @@ func main() {
 	}
 	log.Printf("Found %d song folders", len(songPaths))
 
-	// check if there are less jobs than workers
+	// check if there is less job than workers
 	if int(settings.MaxWorkers) > len(songPaths) {
 		settings.MaxWorkers = uint(len(songPaths))
 	}
