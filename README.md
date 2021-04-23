@@ -37,7 +37,7 @@ There is no way to return removed original backgrounds unless you delete all bea
 ---
 
 ## Licence
-MIT Licence
+MIT License
 
 ---
 
