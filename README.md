@@ -1,9 +1,11 @@
 # OBM (Osu!-background-manager)
 
-## This utility will help you with replacement of Osu!`s beatmap backgrounds
+## This utility will help you with replacement of Osu!`s beatmap backgrounds (and more in the future)
 
 **Use at your own risk !**
 There is no way to return removed original backgrounds unless you delete all beatmaps and reimport newly downloaded versions of them again.  
+
+---
 
 ## Installation 
 
@@ -18,6 +20,8 @@ There is no way to return removed original backgrounds unless you delete all bea
 3. cd to the location of the downloaded version
 4. unzip (7z x **archive_name**) - for 7z archives 
 
+---
+
 ## Usage
 
 ### First run 
@@ -29,3 +33,12 @@ There is no way to return removed original backgrounds unless you delete all bea
 
 ### After
 1. Just run the utility again. If it found the settings file - it will perform the magic
+
+---
+
+## Licence
+MIT Licence
+
+---
+
+If you have found this program useful, then consider to give this repository a ☆. It is not difficult for you, but means a lot for me 
