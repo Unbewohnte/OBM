@@ -10,15 +10,15 @@ There is no way to return removed original backgrounds unless you delete all bea
 ## Installation 
 
 ### From source
-1. git clone [https://github.com/Unbewohnte/OBM.git](https://github.com/Unbewohnte/OBM.git) or download and unzip the archive
+1. `git clone https://github.com/Unbewohnte/OBM.git` or download and unzip the archive
 2. cd into the directory
-3. go build
+3. `go build`
 
 ### From release
 1. go to the [releases](https://github.com/Unbewohnte/OBM/releases) page
 2. choose your OS and download the archive
 3. cd to the location of the downloaded version
-4. unzip (7z x **archive_name**) - for 7z archives 
+4. unzip (`7z x **archive_name**`) - for 7z archives 
 
 ---
 
