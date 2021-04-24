@@ -27,7 +27,7 @@ There is no way to return removed original backgrounds unless you delete all bea
 ### First run 
 1. The program will generate a settings.json file if it is not already in the directory when you run it
 2. Paste your Osu! filepath in the "pathToOsu" field
-3. Paste the filepath of the image in the "pathToimage" field. **ALL** beatmap`s backgrounds will be replaced with this image 
+3. Paste the filepath to the image in the "pathToimage" field. **ALL** beatmap`s backgrounds will be replaced with this image 
 4. Additionally you can disable the "createBlackBackgoundImage" by replacing **true** with **false** or change the number of workers
 5. Run the program once again
 
