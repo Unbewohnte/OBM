@@ -9,7 +9,7 @@ There is no way to return removed original backgrounds unless you delete all bea
 
 ## Installation 
 
-### From source
+### From source (You`ll need [Go](https://golang.org/dl/) installed)
 1. `git clone https://github.com/Unbewohnte/OBM.git` or download and unzip the archive
 2. cd into the directory
 3. `go build`
