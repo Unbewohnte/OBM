@@ -1,6 +1,6 @@
 # OBM (Osu!-background-manager)
 
-## This utility will help you with replacement of Osu!`s beatmap backgrounds (and more in the future)
+## This utility will help you with replacement and retrieving Osu!`s beatmap backgrounds and more in the future
 
 **Use at your own risk !**
 There is no way to return removed original backgrounds unless you delete all beatmaps and reimport newly downloaded versions of them again.  
@@ -26,7 +26,8 @@ There is no way to return removed original backgrounds unless you delete all bea
 
 ### First run 
 1. The program will generate a settings.json file if it is not already in the directory when you run it
-2. Paste your Osu! filepath in the "pathToOsu" field
+2. Paste your Osu! filepath in the "pathToOsu" field (this field is required)
+3. enable/disable
 3. Paste the filepath to the image in the "pathToimage" field. **ALL** beatmap`s backgrounds will be replaced with this image 
 4. Additionally you can disable the "createBlackBackgoundImage" by replacing **true** with **false** or change the number of workers
 5. Run the program once again
