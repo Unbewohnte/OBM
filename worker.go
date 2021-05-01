@@ -2,8 +2,6 @@ package main
 
 import (
 	"sync"
-
-	"github.com/Unbewohnte/OBM/manager"
 )
 
 // a basic implementation of a concurrent worker
@@ -13,18 +11,20 @@ func worker(jobs <-chan job, results chan result, WG *sync.WaitGroup) {
 		var successful, failed uint64 = 0, 0
 
 		if job.retrievementPath != "" {
-			s, f := manager.RetrieveBackgrounds(job.beatmapFolderPath, job.retrievementPath)
+			s, f := job.beatmap.RetrieveBackgrounds(job.retrievementPath)
 			successful += s
 			failed += f
 		}
 		if job.replacementImagePath != "" {
-			s, f := manager.ReplaceBackgrounds(job.beatmapFolderPath, job.replacementImagePath)
+			s, f := job.beatmap.ReplaceBackgrounds(job.replacementImagePath)
 			successful += s
 			failed += f
 		}
 		results <- result{
-			successful: successful,
-			failed:     failed,
+			beatmapName:   job.beatmap.Name,
+			numberOfDiffs: uint(len(job.beatmap.Diffs)),
+			successful:    successful,
+			failed:        failed,
 		}
 	}
 

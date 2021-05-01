@@ -8,14 +8,14 @@ import (
 )
 
 // opens given files, copies one into another
-func CopyFile(src, dst string) error {
-	srcFile, err := os.Open(src)
+func CopyFile(srcPath, dstPath string) error {
+	srcFile, err := os.Open(srcPath)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Could not open src file : %s", err))
 	}
 	defer srcFile.Close()
 
-	dstFile, err := os.OpenFile(dst, os.O_WRONLY, os.ModePerm)
+	dstFile, err := os.OpenFile(dstPath, os.O_WRONLY|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Could not open dst file : %s", err))
 	}

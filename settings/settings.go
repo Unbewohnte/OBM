@@ -69,7 +69,7 @@ func Create() error {
 	return nil
 }
 
-// unmarshalls settings.json into struct
+// unmarshalls settings.json into struct and processes the edge-cases
 func Get() Settings {
 	settingsFileContents, err := os.ReadFile(settingsFilename)
 	if err != nil {
@@ -80,6 +80,12 @@ func Get() Settings {
 	err = json.Unmarshal(settingsFileContents, &settings)
 	if err != nil {
 		logger.LogError(true, fmt.Sprintf("Could not unmarshal json file : %s", err))
+	}
+
+	// if all features are disabled
+	if !settings.BackgroundReplacement.Enabled && !settings.BackgroundRetrievement.Enabled {
+		logger.LogInfo("No features enabled. Exiting...")
+		os.Exit(0)
 	}
 
 	// checking for edge cases or mistakes made in the settings file,

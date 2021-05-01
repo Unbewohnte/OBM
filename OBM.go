@@ -12,19 +12,17 @@ import (
 	"github.com/Unbewohnte/OBM/util"
 )
 
-var (
-	WG sync.WaitGroup
-)
-
-type job struct {
-	beatmapFolderPath    string
-	replacementImagePath string
-	retrievementPath     string
+type result struct {
+	beatmapName   string
+	numberOfDiffs uint
+	successful    uint64
+	failed        uint64
 }
 
-type result struct {
-	successful uint64
-	failed     uint64
+type job struct {
+	beatmap              manager.Beatmap
+	replacementImagePath string
+	retrievementPath     string
 }
 
 func init() {
@@ -44,6 +42,8 @@ func init() {
 }
 
 func main() {
+	var WG sync.WaitGroup
+
 	startingTime := time.Now()
 
 	SETTINGS := settings.Get()
@@ -58,23 +58,24 @@ func main() {
 		}
 	}
 
-	beatmaps, err := manager.GetBeatmapFolderPaths(SETTINGS.OsuDir)
+	beatmaps, err := manager.GetBeatmaps(SETTINGS.OsuDir)
 	if err != nil {
-		logger.LogError(true, "Error getting beatmap folders: ", err)
+		logger.LogError(true, "Error getting beatmaps: ", err)
 	}
-	logger.LogInfo(fmt.Sprintf("Found %d beatmap folders", len(beatmaps)))
+	logger.LogInfo(fmt.Sprintf("Found %d beatmaps", len(beatmaps)))
 
 	// creating jobs for workers
 	jobs := make(chan job, len(beatmaps))
 	for _, beatmap := range beatmaps {
 		jobs <- job{
-			beatmapFolderPath:    beatmap,
+			beatmap:              beatmap,
 			replacementImagePath: SETTINGS.BackgroundReplacement.ReplacementImagePath,
 			retrievementPath:     SETTINGS.BackgroundRetrievement.RetrievementPath,
 		}
 	}
 	close(jobs)
 
+	// perform the magic
 	results := make(chan result, len(jobs))
 	workerPool(jobs, results, SETTINGS.Workers, &WG)
 	WG.Wait()
@@ -85,6 +86,9 @@ func main() {
 	for result := range results {
 		successful += result.successful
 		failed += result.failed
+
+		logger.LogInfo(fmt.Sprintf("Beatmap: %s; Number of diffs: %d;\n Successful: %d; Failed: %d",
+			result.beatmapName, result.numberOfDiffs, result.successful, result.failed))
 	}
 	total := successful + failed
 
