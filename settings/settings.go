@@ -99,7 +99,7 @@ func Get() Settings {
 			logger.LogError(true, "`retrievementPath` is not specified !")
 		}
 	} else {
-		settings.BackgroundReplacement.ReplacementImagePath = ""
+		settings.BackgroundRetrievement.RetrievementPath = ""
 	}
 
 	if settings.Workers <= 0 {
