@@ -1,6 +1,6 @@
 # OBM (Osu!-background-manager)
 
-## This utility will help you with replacement and retrieving Osu!`s beatmap backgrounds and more in the future
+## This utility will help you with replacement and retrievement of Osu!`s beatmap backgrounds and more in the future
 
 **Use at your own risk !**
 There is no way to return removed original backgrounds unless you delete all beatmaps and reimport newly downloaded versions of them again.  
@@ -18,7 +18,7 @@ There is no way to return removed original backgrounds unless you delete all bea
 1. go to the [releases](https://github.com/Unbewohnte/OBM/releases) page
 2. choose your OS and download the archive
 3. cd to the location of the downloaded version
-4. unzip (`7z x **archive_name**`) - for 7z archives 
+4. unzip (`7z x **archive_name**`) - for 7z archives
 
 ---
 
@@ -27,12 +27,12 @@ There is no way to return removed original backgrounds unless you delete all bea
 ### First run 
 1. The program will generate a settings.json file if it is not already in the directory when you run it
 2. Paste your Osu! filepath in the "pathToOsu" field (this field is required) 
-3. Enable/Disable needed features, provide valid filepaths to them 
+3. Enable/Disable needed features, providing valid filepaths to them 
 4. Additionally you can disable the "createBlackBackgoundImage" by replacing **true** with **false** or change the number of workers
 5. Run the program once again
 
 ### After
-1. Just run the utility again. If it found the settings file - it will perform the magic
+1. Start the utility again. If it has found the settings file - it will perform the magic
 
 ---
 
