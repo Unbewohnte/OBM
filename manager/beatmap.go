@@ -53,7 +53,7 @@ func (BEATMAP *Beatmap) GetBackgroundName(mapName string) (string, error) {
 
 // parses each beatmap`s .osu file for background info;
 // removes original background and replaces it with copied version of given image
-func (BEATMAP *Beatmap) ReplaceBackgrounds(replacementPicPath string) (successful, failed uint64) {
+func (BEATMAP *Beatmap) ReplaceBackgrounds(replacementPicPath string) (successful, failed uint) {
 	// looping through each .osu file of a beatmap
 	for _, diff := range BEATMAP.Diffs {
 		background, err := BEATMAP.GetBackgroundName(diff)
@@ -83,7 +83,7 @@ func (BEATMAP *Beatmap) ReplaceBackgrounds(replacementPicPath string) (successfu
 }
 
 // retrieves backgrounds from given beatmap folder (same as in `ReplaceBackgrounds`) and copies them to the retrievement path
-func (BEATMAP *Beatmap) RetrieveBackgrounds(retrievementPath string) (successful, failed uint64) {
+func (BEATMAP *Beatmap) RetrieveBackgrounds(retrievementPath string) (successful, failed uint) {
 	// looping through each .osu file of a beatmap
 	for _, diff := range BEATMAP.Diffs {
 		background, err := BEATMAP.GetBackgroundName(diff)

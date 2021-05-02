@@ -10,12 +10,12 @@ import (
 )
 
 // creates a complete black image file
-func CreateBlackBG(width, height int) error {
+func CreateBlackBG(width, height uint) error {
 	bgfile, err := os.Create("blackBG.png")
 	if err != nil {
 		return errors.New(fmt.Sprintf("Could not create black background file : %s", err))
 	}
-	image := image.NewRGBA(image.Rect(0, 0, width, height))
+	image := image.NewRGBA(image.Rect(0, 0, int(width), int(height)))
 	bounds := image.Bounds()
 
 	for y := 0; y < bounds.Max.Y; y++ {

@@ -8,7 +8,7 @@ import (
 func worker(jobs <-chan job, results chan result, WG *sync.WaitGroup) {
 	defer WG.Done()
 	for job := range jobs {
-		var successful, failed uint64 = 0, 0
+		var successful, failed uint = 0, 0
 
 		if job.retrievementPath != "" {
 			s, f := job.beatmap.RetrieveBackgrounds(job.retrievementPath)

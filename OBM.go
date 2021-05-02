@@ -15,8 +15,8 @@ import (
 type result struct {
 	beatmapName   string
 	numberOfDiffs uint
-	successful    uint64
-	failed        uint64
+	successful    uint
+	failed        uint
 }
 
 type job struct {
@@ -49,8 +49,8 @@ func main() {
 	SETTINGS := settings.Get()
 
 	// creating black image
-	if SETTINGS.CreateBlackBGImage {
-		err := util.CreateBlackBG(1920, 1080)
+	if SETTINGS.CreateBlackBGImage.Enabled {
+		err := util.CreateBlackBG(SETTINGS.CreateBlackBGImage.Width, SETTINGS.CreateBlackBGImage.Height)
 		if err == nil {
 			logger.LogInfo("Successfully created black background")
 		} else {
@@ -82,7 +82,7 @@ func main() {
 	close(results)
 
 	// extracting results and logging the last message
-	var successful, failed uint64 = 0, 0
+	var successful, failed uint = 0, 0
 	for result := range results {
 		successful += result.successful
 		failed += result.failed

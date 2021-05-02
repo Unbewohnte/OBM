@@ -30,7 +30,7 @@ func DoesExist() (bool, error) {
 	return false, nil
 }
 
-// creates "settings.json" and sets the flag
+// creates "settings.json" in current directory
 func Create() error {
 	exists, err := DoesExist()
 	if err != nil {
@@ -56,14 +56,18 @@ func Create() error {
 			Enabled:          false,
 			RetrievementPath: "",
 		},
-		CreateBlackBGImage: true,
-		Workers:            100,
+		CreateBlackBGImage: creatingBG{
+			Enabled: true,
+			Width:   1920,
+			Height:  1080,
+		},
+		Workers: 100,
 	}, "", " ")
 	if err != nil {
 		return errors.New(fmt.Sprintf("Could not marshal settings into file : %s", err))
 	}
-	file.Write(settingsJson)
 
+	file.Write(settingsJson)
 	file.Close()
 
 	return nil
