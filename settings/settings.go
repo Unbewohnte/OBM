@@ -56,7 +56,7 @@ func Create() error {
 			Enabled:          false,
 			RetrievementPath: "",
 		},
-		CreateBlackBGImage: creatingBG{
+		CreateBlackBGImage: backgroundCreatement{
 			Enabled: true,
 			Width:   1920,
 			Height:  1080,
