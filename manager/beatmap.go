@@ -18,6 +18,78 @@ type Beatmap struct {
 	Diffs []string
 }
 
+// filepath.Joins the main osu directory with its songs folder
+func getSongsDir(baseOsuDir string) (string, error) {
+	songsDir := filepath.Join(baseOsuDir, "Songs")
+
+	stat, err := os.Stat(songsDir)
+	if err != nil {
+		return "", errors.New(fmt.Sprintf("Could not process the given path : %s", err))
+	}
+	if !stat.IsDir() {
+		return "", errors.New("Given Osu! directory is not a directory !")
+	}
+
+	return songsDir, nil
+}
+
+// checks for .osu files in given path and returns all found instances
+func getDiffs(path string) ([]string, error) {
+	files, err := os.ReadDir(path)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Could not read a directory : %s", err))
+	}
+
+	var diffs []string
+	for _, file := range files {
+		filename := file.Name()
+		if util.IsBeatmap(filename) {
+			diffs = append(diffs, filename)
+		}
+	}
+	return diffs, nil
+}
+
+// constructs a `Beatmap` struct and returns it
+func newBeatmap(name, path string, diffs []string) Beatmap {
+	return Beatmap{
+		Name:  name,
+		Path:  path,
+		Diffs: diffs,
+	}
+}
+
+// returns an array of beatmaps from given base Osu! directory
+func GetBeatmaps(baseOsuDir string) ([]Beatmap, error) {
+	songsDir, err := getSongsDir(baseOsuDir)
+	if err != nil {
+		return nil, err
+	}
+	contents, err := os.ReadDir(songsDir)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Could not read a directory : %s", err))
+	}
+
+	var beatmaps []Beatmap
+	// looping through all folders in yourOsuDir/Songs/ directory
+	for _, file := range contents {
+		if file.IsDir() {
+			// retrieving all necessary data for creating a new instance of a beatmap
+			beatmapName := file.Name()
+			pathToBeatmap := filepath.Join(songsDir, beatmapName)
+			diffs, err := getDiffs(pathToBeatmap)
+			if err != nil {
+				continue
+			}
+			newBeatmap := newBeatmap(beatmapName, pathToBeatmap, diffs)
+
+			beatmaps = append(beatmaps, newBeatmap)
+		}
+	}
+
+	return beatmaps, nil
+}
+
 // parses given .osu file and returns the filename of its background
 // NOTE: Osu! beatmap (as whole) can have multiple backgrounds for each .osu file
 // the perfect example : https://osu.ppy.sh/beatmapsets/43701#osu/137122
@@ -53,7 +125,7 @@ func (BEATMAP *Beatmap) GetBackgroundName(mapName string) (string, error) {
 
 // parses each beatmap`s .osu file for background info;
 // removes original background and replaces it with copied version of given image
-func (BEATMAP *Beatmap) ReplaceBackgrounds(replacementPicPath string) (successful, failed uint) {
+func (BEATMAP *Beatmap) ReplaceBackgrounds(replacementImgPath string) (successful, failed uint) {
 	// looping through each .osu file of a beatmap
 	for _, diff := range BEATMAP.Diffs {
 		background, err := BEATMAP.GetBackgroundName(diff)
@@ -71,7 +143,7 @@ func (BEATMAP *Beatmap) ReplaceBackgrounds(replacementPicPath string) (successfu
 		}
 
 		// copy given picture, thus replacing background
-		err = util.CopyFile(replacementPicPath, filepath.Join(BEATMAP.Path, background))
+		err = util.CopyFile(replacementImgPath, filepath.Join(BEATMAP.Path, background))
 		if err != nil {
 			logger.LogError(false, fmt.Sprintf("BEATMAP: %s: Could not copy: %s", diff, err))
 			failed++
