@@ -23,7 +23,7 @@ There is no way to return removed original backgrounds unless you delete all bea
 ---
 
 ## Usage
-To run - `./OBM` in terminal (on Unix) || `OBM` in command line (on Windows)  
+To run - `./OBM` in terminal (on Unix) || `OBM` in command line (on Windows) (a simple double-click on exe will certainly work as well)
 
 ### First run 
 1. The program will generate a settings.json file if it is not already in the directory when you run it
@@ -37,7 +37,9 @@ To run - `./OBM` in terminal (on Unix) || `OBM` in command line (on Windows)
 
 ### Flags (starting from version 1.3.4)
 Right now there is one argument that you can specify before running the program - "beatmap".
-This flag will tell the program to do its work **ONLY** on beatmaps with specified name; others will be ignored
+This flag will tell the program to do its work **ONLY** on beatmaps with specified name; others will be ignored.
+The names of beatmaps in Osu! consist an id, author of the soundtrack and the name of the soundtrack, so you can
+specify any name in the flag that will contain one of those parts. 
 
 #### Examples
 1. `./OBM -beatmap=""` - the same as just `./OBM`. It will affect **all** of your beatmaps
