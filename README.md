@@ -36,7 +36,9 @@ To run - `./OBM` in terminal (on Unix) || `OBM` in command line (on Windows)
 
 
 ### Flags (starting from version 1.3.4)
-Right now there is one argument that you can specify before running the program - "beatmap"
+Right now there is one argument that you can specify before running the program - "beatmap".
+This flag will tell the program to do its work **ONLY** on beatmaps with specified name; others will be ignored
+
 #### Examples
 1. `./OBM -beatmap=""` - the same as just `./OBM`. It will affect **all** of your beatmaps
 2. `./OBM -beatmap="Demetori"` - this will search for beatmaps with names that contain "Demetori" and will work only with them
