@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"sync"
@@ -36,8 +37,10 @@ func init() {
 		logger.LogInfo("Successfully created new settings file")
 		os.Exit(0)
 	}
-
 	logger.LogInfo("Found settings file")
+
+	// parse for `-beatmap` argument
+	flag.Parse()
 	return
 }
 
@@ -48,7 +51,7 @@ func main() {
 
 	SETTINGS := settings.Get()
 
-	// creating black image
+	// creating black image if enabled
 	if SETTINGS.CreateBlackBGImage.Enabled {
 		err := util.CreateBlackBG(SETTINGS.CreateBlackBGImage.Width, SETTINGS.CreateBlackBGImage.Height)
 		if err == nil {
@@ -58,11 +61,26 @@ func main() {
 		}
 	}
 
+	// get an array of all beatmaps
 	beatmaps, err := manager.GetBeatmaps(SETTINGS.OsuDir)
 	if err != nil {
 		logger.LogError(true, "Error getting beatmaps: ", err)
 	}
 	logger.LogInfo(fmt.Sprintf("Found %d beatmaps", len(beatmaps)))
+
+	// If `cmdlnBeatmap` is specified - do the magic only for found beatmaps
+	if *cmdlnBeatmap != "" {
+		logger.LogInfo(fmt.Sprintf("Trying to locate \"%s\"...", *cmdlnBeatmap))
+		found, n := manager.Search(beatmaps, *cmdlnBeatmap)
+		logger.LogInfo(fmt.Sprintf("Checked %d beatmaps. Found %d instance(s)", n, len(found)))
+
+		// if found nothing - exit
+		if len(found) == 0 {
+			os.Exit(0)
+		}
+		// replace all beatmaps with found ones
+		beatmaps = found
+	}
 
 	// creating jobs for workers
 	jobs := make(chan job, len(beatmaps))
