@@ -56,6 +56,9 @@ func Create() error {
 			Enabled:          false,
 			RetrievementPath: "",
 		},
+		BackgroundRemovement: backgroundRemovement{
+			Enabled: false,
+		},
 		CreateBlackBGImage: backgroundCreatement{
 			Enabled: true,
 			Width:   1920,
