@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-// creates a complete black image file
+// creates a complete black image file in current working directory
 func CreateBlackBG(width, height uint) error {
 	bgfile, err := os.Create("blackBG.png")
 	if err != nil {

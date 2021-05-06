@@ -36,10 +36,12 @@ To run - `./OBM` in terminal (on Unix) || `OBM` in command line (on Windows) (a 
 
 
 ### Flags (starting from version 1.3.4)
-Right now there is one argument that you can specify before running the program - "beatmap".
-This flag will tell the program to do its work **ONLY** on beatmaps with specified name; others will be ignored.
-The names of beatmaps in Osu! consist an id, author of the soundtrack and the name of the soundtrack, so you can
-specify any name in the flag that will contain one of those parts. 
+Right now there is 2 arguments that you can specify before running the program - "beatmap" and "showOrder".
+"-beatmap" flag takes a string; it will tell the program to do its work **ONLY** on beatmaps with specified name; others will be ignored.
+The names of beatmaps in Osu! consist an id, artist and the name of the soundtrack, so you can
+specify any name in the flag that will contain one of those parts.
+
+"-showOrder" flag takes a boolean; if set to **true** - it will print an order in which the workers perform operations over each beatmap. Right now it`s just a helper flag.
 
 #### Examples
 1. `./OBM -beatmap=""` - the same as just `./OBM`. It will affect **all** of your beatmaps
@@ -50,6 +52,8 @@ specify any name in the flag that will contain one of those parts.
 
 The search is case-insensitive, so for example `./OBM -beatmap="Road of Resistance"` and `./OBM -beatmap="ROAD of rEsIsTaNcE"` will get you the same results
 
+6. `./OBM -showOrder=true` - will print the order and exit
+7. `./OBM -showOrder=true -beatmap="something here"` - will print the order and exit, just like in the previous one
 ---
 
 ## License

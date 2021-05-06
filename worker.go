@@ -10,16 +10,23 @@ func worker(jobs <-chan job, results chan result, WG *sync.WaitGroup) {
 	for job := range jobs {
 		var successful, failed uint = 0, 0
 
-		if job.retrievementPath != "" {
-			s, f := job.beatmap.RetrieveBackgrounds(job.retrievementPath)
-			successful += s
-			failed += f
-		}
+		// the order is: Replace->Retrieve->Remove (if all 3 options are enabled)
 		if job.replacementImagePath != "" {
 			s, f := job.beatmap.ReplaceBackgrounds(job.replacementImagePath)
 			successful += s
 			failed += f
 		}
+		if job.retrievementPath != "" {
+			s, f := job.beatmap.RetrieveBackgrounds(job.retrievementPath)
+			successful += s
+			failed += f
+		}
+		if job.remove == true {
+			s, f := job.beatmap.RemoveBackgrounds()
+			successful += s
+			failed += f
+		}
+
 		results <- result{
 			beatmapName:   job.beatmap.Name,
 			numberOfDiffs: uint(len(job.beatmap.Diffs)),

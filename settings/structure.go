@@ -14,6 +14,10 @@ type backgroundRetrievement struct {
 	RetrievementPath string `json:"retrievementPath"`
 }
 
+type backgroundRemovement struct {
+	Enabled bool `json:"enabled"`
+}
+
 type backgroundCreatement struct {
 	Enabled bool `json:"enabled"`
 	Width   uint `json:"width"`
@@ -25,6 +29,7 @@ type Settings struct {
 	OsuDir                 string                 `json:"pathToOsu"`
 	BackgroundReplacement  backgroundReplacement  `json:"backgroundReplacement"`
 	BackgroundRetrievement backgroundRetrievement `json:"backgroundRetrievement"`
+	BackgroundRemovement   backgroundRemovement   `json:"backgroundRemovement"`
 	CreateBlackBGImage     backgroundCreatement   `json:"blackBackgroundCreatement"`
 	Workers                int                    `json:"workers"`
 }

@@ -24,6 +24,7 @@ type job struct {
 	beatmap              manager.Beatmap
 	replacementImagePath string
 	retrievementPath     string
+	remove               bool
 }
 
 func init() {
@@ -41,6 +42,12 @@ func init() {
 
 	// parse for `-beatmap` argument
 	flag.Parse()
+
+	// if `-showOrder` is checked - show the message
+	if *showOrder == true {
+		fmt.Print(orderMessage)
+		os.Exit(0)
+	}
 	return
 }
 
@@ -68,7 +75,7 @@ func main() {
 	}
 	logger.LogInfo(fmt.Sprintf("Found %d beatmaps", len(beatmaps)))
 
-	// If `cmdlnBeatmap` is specified - do the magic only for found beatmaps
+	// If `-beatmap` flag is specified - do the magic only on found beatmaps
 	if *cmdlnBeatmap != "" {
 		logger.LogInfo(fmt.Sprintf("Trying to locate \"%s\"...", *cmdlnBeatmap))
 		found, n := manager.Search(beatmaps, *cmdlnBeatmap)
@@ -89,6 +96,7 @@ func main() {
 			beatmap:              beatmap,
 			replacementImagePath: SETTINGS.BackgroundReplacement.ReplacementImagePath,
 			retrievementPath:     SETTINGS.BackgroundRetrievement.RetrievementPath,
+			remove:               SETTINGS.BackgroundRemovement.Enabled,
 		}
 	}
 	close(jobs)
@@ -110,7 +118,7 @@ func main() {
 	}
 	total := successful + failed
 
-	logger.LogInfo(fmt.Sprintf("DONE in %v. %d operations successful (%d%%/100%%); %d failed (%d%%/100%%)",
-		time.Since(startingTime), successful, successful/total*100, failed, failed/total*100))
+	logger.LogInfo(fmt.Sprintf("DONE in %v. %d operations successful (%.2f%%/100%%); %d failed (%.2f%%/100%%)",
+		time.Since(startingTime), successful, float32(successful)/float32(total)*100, failed, float32(failed)/float32(total)*100))
 
 }

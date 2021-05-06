@@ -44,3 +44,11 @@ func IsImage(filename string) bool {
 	}
 	return false
 }
+
+func DoesExist(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return true
+}
