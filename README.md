@@ -36,7 +36,7 @@ To run - `./OBM` in terminal (on Unix) || `OBM` in command line (on Windows) (a 
 
 
 ### Flags (starting from version 1.3.4)
-Right now there is 2 arguments that you can specify before running the program - "beatmap" and "showOrder".
+Right now there are 2 arguments that you can specify before running the program - "beatmap" and "showOrder".
 "-beatmap" flag takes a string; it will tell the program to do its work **ONLY** on beatmaps with specified name; others will be ignored.
 The names of beatmaps in Osu! consist an id, artist and the name of the soundtrack, so you can
 specify any name in the flag that will contain one of those parts.
