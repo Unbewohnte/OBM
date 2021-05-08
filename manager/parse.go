@@ -12,7 +12,7 @@ import (
 // parses given .osu file and returns the filename of its background
 // NOTE: Osu! beatmap (as whole) can have multiple backgrounds for each .osu file
 // the perfect example : https://osu.ppy.sh/beatmapsets/43701#osu/137122
-// this is why this functions asks for a certain difficulty (.osu filename) to be sure
+// this is why this function asks for a certain difficulty (.osu filename) to be sure
 // to return the correct background name
 func (BEATMAP *Beatmap) GetBackgroundName(diff string) (string, error) {
 	beatmapBytes, err := os.ReadFile(filepath.Join(BEATMAP.Path, diff))

@@ -37,6 +37,7 @@ func worker(jobs <-chan job, results chan result, WG *sync.WaitGroup) {
 
 }
 
+// the `starter` that `glues` workers and jobs together
 func workerPool(jobs chan job, results chan result, numOfWorkers int, WG *sync.WaitGroup) {
 	// check if there are less jobs than workers
 	if numOfWorkers > len(jobs) {

@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// checks if given path is a directory
 func IsDir(path string) bool {
 	info, err := os.Stat(path)
 	if err != nil {
@@ -45,6 +46,7 @@ func IsImage(filename string) bool {
 	return false
 }
 
+// checks if given directory/file does exist
 func DoesExist(path string) bool {
 	_, err := os.Stat(path)
 	if err != nil {

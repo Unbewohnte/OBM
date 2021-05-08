@@ -43,7 +43,7 @@ func init() {
 	// parse for `-beatmap` argument
 	flag.Parse()
 
-	// if `-showOrder` is checked - show the message
+	// if `-showOrder` is checked - show the message and exit
 	if *showOrder == true {
 		fmt.Print(orderMessage)
 		os.Exit(0)
