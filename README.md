@@ -23,7 +23,7 @@ There is no way to return removed original backgrounds unless you delete all bea
 ---
 
 ## Usage
-To run - `./OBM` in terminal (on Unix) || `OBM` in command line (on Windows) (a simple double-click on exe will certainly work as well)
+To run - `./OBM` in terminal (on Unix) || `OBM.exe` in command line (on Windows) (a simple double-click on exe will certainly work as well)
 
 ### First run 
 1. The program will generate a settings.json file if it is not already in the directory when you run it
