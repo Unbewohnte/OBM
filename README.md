@@ -1,6 +1,7 @@
 # OBM (Osu!-Background-Manager)
 
 ## This utility will help you with replacement, retrievement and removement of Osu!\`s beatmaps\` backgrounds
+## NOTE: does NOT work with Osu!Lazer (Lazer has a different handling for beatmaps) 
 
 **Use at your own risk !**
 There is no way to return removed original backgrounds unless you delete all beatmaps and reimport newly downloaded versions of them again.  
