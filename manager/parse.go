@@ -1,7 +1,7 @@
 package manager
 
 import (
-	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -24,13 +24,13 @@ func (BEATMAP *Beatmap) GetBackgroundName(diff string) (string, error) {
 	// get index of "[Events]" (this is where BG filename is stored)
 	eventsIndex := strings.Index(beatmapContents, "[Events]")
 	if eventsIndex == -1 {
-		return "", errors.New("Could not retrieve index of \"[Events]\"")
+		return "", fmt.Errorf("could not retrieve index of \"[Events]\"")
 	}
 	// get index of [TimingPoints] (this tag is right after the previous "[Events]" tag,
 	// so we can grab the whole "[Events]" tag contents)
 	timingPointsIndex := strings.Index(beatmapContents, "[TimingPoints]")
 	if timingPointsIndex == -1 {
-		return "", errors.New("Could not retrieve index of \"[TimingPoints]\"")
+		return "", fmt.Errorf("could not retrieve index of \"[TimingPoints]\"")
 	}
 	contentBetween := strings.Split(beatmapContents[eventsIndex:timingPointsIndex], ",")
 

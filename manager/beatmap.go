@@ -1,7 +1,6 @@
 package manager
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -22,10 +21,10 @@ func getSongsDir(baseOsuDir string) (string, error) {
 
 	stat, err := os.Stat(songsDir)
 	if err != nil {
-		return "", errors.New(fmt.Sprintf("Could not process the given path : %s", err))
+		return "", fmt.Errorf("could not process the given path : %s", err)
 	}
 	if !stat.IsDir() {
-		return "", errors.New("Given Osu! directory is not a directory !")
+		return "", fmt.Errorf("given Osu! directory is not a directory")
 	}
 
 	return songsDir, nil
@@ -35,7 +34,7 @@ func getSongsDir(baseOsuDir string) (string, error) {
 func getDiffs(path string) ([]string, error) {
 	files, err := os.ReadDir(path)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Could not read a directory : %s", err))
+		return nil, fmt.Errorf("could not read a directory : %s", err)
 	}
 
 	var diffs []string
@@ -65,7 +64,7 @@ func GetBeatmaps(baseOsuDir string) ([]Beatmap, error) {
 	}
 	contents, err := os.ReadDir(songsDir)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Could not read a directory : %s", err))
+		return nil, fmt.Errorf("could not read a directory : %s", err)
 	}
 
 	var beatmaps []Beatmap

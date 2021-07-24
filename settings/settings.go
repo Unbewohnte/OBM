@@ -2,7 +2,6 @@ package settings
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 
@@ -18,7 +17,7 @@ const (
 func DoesExist() (bool, error) {
 	files, err := os.ReadDir(".")
 	if err != nil {
-		return false, errors.New(fmt.Sprintf("Unable to read current directory %s", err))
+		return false, fmt.Errorf("wasn`t able to read current directory %s", err)
 	}
 
 	for _, file := range files {
@@ -42,8 +41,9 @@ func Create() error {
 
 	file, err := os.Create(settingsFilename)
 	if err != nil {
-		return errors.New(fmt.Sprintf("Unable to create settings file : %s", err))
+		return fmt.Errorf("could not create settings file : %s", err)
 	}
+	defer file.Close()
 
 	// marshaling default settings
 	settingsJson, err := json.MarshalIndent(Settings{
@@ -67,11 +67,10 @@ func Create() error {
 		Workers: 100,
 	}, "", " ")
 	if err != nil {
-		return errors.New(fmt.Sprintf("Could not marshal settings into file : %s", err))
+		return fmt.Errorf("could not marshal settings into file : %s", err)
 	}
 
 	file.Write(settingsJson)
-	file.Close()
 
 	return nil
 }
@@ -90,7 +89,7 @@ func Get() Settings {
 	}
 
 	// if all features are disabled
-	if !settings.BackgroundReplacement.Enabled && !settings.BackgroundRetrievement.Enabled {
+	if !settings.BackgroundReplacement.Enabled && !settings.BackgroundRetrievement.Enabled && !settings.BackgroundRemovement.Enabled {
 		logger.LogInfo("No features enabled. Exiting...")
 		os.Exit(0)
 	}
