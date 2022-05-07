@@ -7,10 +7,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Unbewohnte/OBM/logger"
-	"github.com/Unbewohnte/OBM/manager"
-	"github.com/Unbewohnte/OBM/settings"
-	"github.com/Unbewohnte/OBM/util"
+	"unbewohnte.xyz/Unbewohnte/OBM/logger"
+	"unbewohnte.xyz/Unbewohnte/OBM/manager"
+	"unbewohnte.xyz/Unbewohnte/OBM/settings"
+	"unbewohnte.xyz/Unbewohnte/OBM/util"
 )
 
 type result struct {

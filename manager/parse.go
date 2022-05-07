@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Unbewohnte/OBM/util"
+	"unbewohnte.xyz/Unbewohnte/OBM/util"
 )
 
 // parses given .osu file and returns the filename of its background

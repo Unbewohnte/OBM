@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Unbewohnte/OBM/util"
+	"unbewohnte.xyz/Unbewohnte/OBM/util"
 )
 
 // the main beatmap struct, contains necessary data for functions

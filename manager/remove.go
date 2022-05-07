@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Unbewohnte/OBM/logger"
+	"unbewohnte.xyz/Unbewohnte/OBM/logger"
 )
 
 // parses each difficulty for background info, removes found backgrounds
