@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"unbewohnte.xyz/Unbewohnte/OBM/logger"
+	"unbewohnte/OBM/logger"
 )
 
 // parses each difficulty for background info, removes found backgrounds

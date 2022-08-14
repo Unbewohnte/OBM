@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"unbewohnte.xyz/Unbewohnte/OBM/logger"
-	"unbewohnte.xyz/Unbewohnte/OBM/util"
+	"unbewohnte/OBM/logger"
+	"unbewohnte/OBM/util"
 )
 
 const (

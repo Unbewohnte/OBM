@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"unbewohnte.xyz/Unbewohnte/OBM/logger"
-	"unbewohnte.xyz/Unbewohnte/OBM/util"
+	"unbewohnte/OBM/logger"
+	"unbewohnte/OBM/util"
 )
 
 // retrieves backgrounds from given beatmap folder (same as in `ReplaceBackgrounds`) and copies them to the retrievement path

@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"unbewohnte.xyz/Unbewohnte/OBM/logger"
-	"unbewohnte.xyz/Unbewohnte/OBM/util"
+	"unbewohnte/OBM/logger"
+	"unbewohnte/OBM/util"
 )
 
 // parses each beatmap`s .osu file for background info;
